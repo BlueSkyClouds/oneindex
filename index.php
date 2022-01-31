@@ -7,7 +7,9 @@ require  __DIR__.'/init.php';
 //onedrive::$oauth_url = "https://login.partner.microsoftonline.cn/common/oauth2/v2.0";
 //onedrive::$onedrive_url = "https://portal.partner.microsoftonline.cn/";
 
+//国际版
 onedrive::$onedrive_url = "https://portal.office.com/";
+
 /**
  *    程序安装
  */

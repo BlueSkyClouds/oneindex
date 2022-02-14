@@ -1,46 +1,116 @@
-<h1 align="center"><a href="https://pan.blueskyclouds.com" target="_blank">OneIndex</a></h1>
+# OneIndex
 
-> Onedrive Directory Index
+Onedrive Directory Index
 
-## 功能
+## 功能：
 
-不占用服务器空间，不走服务器流量，直接列出 OneDrive 目录，文件直链下载。  
+不占用服务器空间，不走服务器流量，
 
-默认国际版本，自用版本，功能看情况更新！
-世纪互联版请编辑`index.php`取消注释`6-8`行
+直接列出 OneDrive 目录，文件直链下载。
 
-## 伪静态
+## 使用及免责协议
 
-```nginx
-if (!-f $request_filename){
-set $rule_0 1$rule_0;
-}
-if (!-d $request_filename){
-set $rule_0 2$rule_0;
-}
-if ($rule_0 = "21"){
-rewrite ^/(.*)$ /index.php?/$1 last;
-}
+[使用及免责协议](./LICENSE.md)
+
+## 安装运行
+
+### 源码安装运行：
+
+#### 需求：
+
+1、PHP 空间，PHP 5.6+ 需打开 curl 支持  
+2、OneDrive 账号 (个人、企业版或教育版/工作或学校帐户)  
+3、OneIndex 程序
+
+## 配置：
+
+<img width="658" alt="image" src="https://raw.githubusercontent.com/doudoudzj/oneindex/files/images/install.gif">
+
+### 计划任务  
+
+[可选]**推荐配置**，非必需。后台定时刷新缓存，可增加前台访问的速度。
+
+```
+# 每小时刷新一次token
+0 * * * * /具体路径/php /程序具体路径/one.php token:refresh
+
+# 每十分钟后台刷新一遍缓存
+*/10 * * * * /具体路径/php /程序具体路径/one.php cache:refresh
 ```
 
-## 更新日志
+### Docker 安装运行
 
-* 2021.09.11 优化功能：优化系统后台页面样式
+-   请参考[TimeBye/oneindex](https://github.com/TimeBye/oneindex)
 
-* 2021.09.11 修复功能：修复 CDN 地址失效的问题
+## 特殊文件实现功能  
 
-* 2021.06.30 新增功能：支持 API 接口上传文件（需要配置授权码）
+`README.md`、`HEAD.md` 、 `.password`特殊文件使用
 
-* 2021.06.30 修复功能：修改自用的初始化配置
+可以参考[https://github.com/doudoudzj/oneindex/tree/files](https://github.com/doudoudzj/oneindex/tree/files)
 
-* 2021.06.14 修复功能：解决前端文件链接地址失效的问题
+**在文件夹底部添加说明:**
 
-* 2021.03.19 修复功能：解决列表排序问题
+> 在 OneDrive 的文件夹中添加`README.md`文件，使用 Markdown 语法。
 
-   ......
+**在文件夹头部添加说明:**
 
-## API接口上传文件
+> 在 OneDrive 的文件夹中添加`HEAD.md` 文件，使用 Markdown 语法。
 
-* 接口地址：/api/v1/upload
-* POST参数名：file
-* 请求头：{"authcode":"xxxxxx"}
+**加密文件夹:**
+
+> 在 OneDrive 的文件夹中添加`.password`文件，填入密码，密码不能为空。
+
+**直接输出网页:**
+
+> 在 OneDrive 的文件夹中添加`index.html` 文件，程序会直接输出网页而不列目录。  
+> 配合 文件展示设置-直接输出 效果更佳。
+
+## 命令行功能  
+
+仅能在 PHP CLI 模式下运行
+
+**清除缓存:**
+
+```
+php one.php cache:clear
+```
+
+**刷新缓存:**
+
+```
+php one.php cache:refresh
+```
+
+**刷新令牌:**
+
+```
+php one.php token:refresh
+```
+
+**上传文件:**
+
+```
+php one.php upload:file 本地文件 [OneDrive文件]
+```
+
+**上传文件夹:**
+
+```
+php one.php upload:folder 本地文件夹 [OneDrive文件夹]
+```
+
+例如：
+
+```
+//上传demo.zip 到OneDrive 根目录
+php one.php upload:file demo.zip
+
+//上传demo.zip 到OneDrive /test/目录
+php one.php upload:file demo.zip /test/
+
+//上传demo.zip 到OneDrive /test/目录并将其命名为 d.zip
+php one.php upload:file demo.zip /test/d.zip
+
+//上传up/ 到OneDrive /test/ 目录
+php one.php upload:file up/ /test/
+```
